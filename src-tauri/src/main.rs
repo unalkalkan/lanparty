@@ -4,10 +4,14 @@
 )]
 
 use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
-use tauri::{State, Manager};
+use std::sync::Mutex;
+use iroh::ticket::NodeTicket;
+use iroh::Endpoint;
+use nextauri::{get_or_create_secret, ALPN};
+use tauri::State;
 use serde::{Serialize, Deserialize};
 use uuid::Uuid;
+use anyhow::Result as AnyhowResult;
 
 // Room struct to store room information
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -30,14 +34,33 @@ struct Player {
 // AppState struct to manage application state
 struct AppState {
     rooms: Mutex<HashMap<String, Room>>,
+    iroh_endpoint: Endpoint,
 }
 
-// Function to create a new room
+// Initialize Iroh node
+async fn init_iroh_endpoint() -> AnyhowResult<Endpoint> {
+    let secret_key = get_or_create_secret()?;
+    let builder = Endpoint::builder()
+        .alpns(vec![ALPN.to_vec()])
+        .secret_key(secret_key)
+        .discovery_n0();
+    let endpoint = builder.bind().await?;
+    println!("Listening on {:?}", endpoint.node_addr().await?);
+    Ok(endpoint)
+}
+
+// Function to create a new room with Iroh connection
 #[tauri::command]
-fn create_room(state: State<'_, AppState>, room_name: String, player_name: String) -> Result<Room, String> {
-    let room_id = Uuid::new_v4().to_string();
-    let player_id = Uuid::new_v4().to_string();
+async fn create_room(state: State<'_, AppState>, room_name: String, player_name: String) -> Result<Room, String> {
+    // Create a ticket for this endpoint so that others can join
+    let endpoint = state.iroh_endpoint.clone();
+    let node_addr = endpoint.node_addr().await.map_err(|_| "Failed to get node address".to_string())?;
+    let ticket = NodeTicket::new(node_addr);
     
+    // Create a room id from the ticket
+    let room_id = ticket.to_string();
+    let player_id = endpoint.node_id().to_string();
+
     let player = Player {
         id: player_id,
         name: player_name.clone(),
@@ -57,9 +80,9 @@ fn create_room(state: State<'_, AppState>, room_name: String, player_name: Strin
     Ok(room)
 }
 
-// Function to join an existing room
+// Function to join an existing room using Iroh
 #[tauri::command]
-fn join_room(state: State<'_, AppState>, room_id: String, player_name: String) -> Result<Room, String> {
+async fn join_room(state: State<'_, AppState>, room_id: String, player_name: String) -> Result<Room, String> {
     let mut rooms = state.rooms.lock().map_err(|_| "Failed to lock rooms".to_string())?;
     
     // Check if the room exists
@@ -72,6 +95,8 @@ fn join_room(state: State<'_, AppState>, room_id: String, player_name: String) -
         name: player_name,
     };
     
+    // TODO: Connect to the Iroh endpoint if a ticket is available
+    
     // Add the player to the room
     room.players.push(player);
     
@@ -80,14 +105,14 @@ fn join_room(state: State<'_, AppState>, room_id: String, player_name: String) -
 
 // Function to get all active rooms
 #[tauri::command]
-fn get_rooms(state: State<'_, AppState>) -> Result<Vec<Room>, String> {
+async fn get_rooms(state: State<'_, AppState>) -> Result<Vec<Room>, String> {
     let rooms = state.rooms.lock().map_err(|_| "Failed to lock rooms".to_string())?;
     Ok(rooms.values().cloned().collect())
 }
 
 // Function to leave a room
 #[tauri::command]
-fn leave_room(state: State<'_, AppState>, room_id: String, player_id: String) -> Result<(), String> {
+async fn leave_room(state: State<'_, AppState>, room_id: String, player_id: String) -> Result<(), String> {
     let mut rooms = state.rooms.lock().map_err(|_| "Failed to lock rooms".to_string())?;
     
     // Check if the room exists
@@ -96,18 +121,32 @@ fn leave_room(state: State<'_, AppState>, room_id: String, player_id: String) ->
     // Remove the player from the room
     room.players.retain(|p| p.id != player_id);
     
-    // If no players left, remove the room
+    // If no players left, remove the room and close Iroh connections
     if room.players.is_empty() {
+        // TODO: Cleanup would happen here - closing specific connections
+        // This would depend on how we're tracking endpoints per room
+        // state.iroh_endpoint.close().await.map_err(|_| "Failed to close Iroh endpoint".to_string())?;
         rooms.remove(&room_id);
     }
     
     Ok(())
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Initialize Iroh node
+    let iroh_endpoint = match init_iroh_endpoint().await {
+        Ok(endpoint) => endpoint,
+        Err(e) => {
+            eprintln!("Failed to initialize Iroh endpoint: {}", e);
+            return Err(e.into());
+        }
+    };
+
     // Initialize the application state
     let app_state = AppState {
         rooms: Mutex::new(HashMap::new()),
+        iroh_endpoint: iroh_endpoint.clone(),
     };
 
     tauri::Builder::default()
@@ -130,4 +169,6 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+    
+    Ok(())
 }
