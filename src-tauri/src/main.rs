@@ -9,7 +9,7 @@ mod iroh;
 mod handlers;
 
 use std::collections::HashMap;
-use std::sync::Mutex;
+use tokio::sync::Mutex;
 use state::AppState;
 use handlers::{create_room, join_room, get_rooms, leave_room};
 
@@ -24,10 +24,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     };
 
+    let (gossip, router) = match iroh::setup::setup_iroh_router(iroh_endpoint.clone()).await {
+        Ok((gossip, router)) => (gossip, router),
+        Err(e) => {
+            eprintln!("Failed to setup Iroh router: {}", e);
+            return Err(e.into());
+        }
+    };
+
     // Initialize the application state
     let app_state = AppState {
         rooms: Mutex::new(HashMap::new()),
         iroh_endpoint: iroh_endpoint.clone(),
+        _router: router.clone(),
+        gossip: gossip.clone(),
     };
 
     tauri::Builder::default()
