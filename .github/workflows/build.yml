@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - master
+      - dependabot/*
   pull_request:
 
 jobs:
