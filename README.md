@@ -60,7 +60,7 @@ LAN Party is being built as a cross-platform application using Nextauri (Next.js
 
 ## ⚡ Technical Implementation
 
-LAN Party leverages WebRTC for peer-to-peer connections and encryption, with a focus on:
+LAN Party leverages [Iroh](https://www.iroh.computer/) P2P library for peer-to-peer connections and encryption, with a focus on:
 - Secure, encrypted data transfer
 - NAT traversal for connectivity across different networks
 - Minimal resource usage
