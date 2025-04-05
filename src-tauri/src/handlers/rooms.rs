@@ -87,7 +87,7 @@ pub async fn create_room(state: State<'_, AppState>, room_name: String, player_n
     let topic = TopicId::from_bytes(rand::random());
     let me = endpoint.node_addr().await.map_err(|_| "Failed to get node address".to_string())?;
     let nodes = Arc::new(vec![me]);
-    let ticket = Ticket { topic, nodes: nodes.clone().to_vec() };
+    let ticket = Ticket { topic, nodes: nodes.clone().to_vec(), room_name: room_name.clone(), host_name: player_name.clone() };
 
     // Create a room id from the ticket
     let room_id = ticket.to_string();
@@ -129,7 +129,7 @@ pub async fn join_room(state: State<'_, AppState>, room_id: String, player_name:
     let endpoint = state.clone().iroh_endpoint.clone();
     
     // Get the ticket from the room id
-    let Ticket { topic, nodes } = Ticket::from_str(&room_id).map_err(|_| "Invalid room ID".to_string())?;
+    let Ticket { topic, nodes, room_name, host_name } = Ticket::from_str(&room_id).map_err(|_| "Invalid room ID".to_string())?;
     println!("> joining chat room for topic {topic}");
 
     // add the peer addrs from the ticket to our endpoint's addressbook so that they can be dialed
@@ -140,8 +140,8 @@ pub async fn join_room(state: State<'_, AppState>, room_id: String, player_name:
     // Add the room to our state
     let mut room = Room {
         id: room_id.clone(),
-        name: "Unknown".to_string(),
-        host: "Unknown".to_string(),
+        name: room_name,
+        host: host_name,
         players: vec![],
     };
     let mut rooms = state.rooms.lock().await;

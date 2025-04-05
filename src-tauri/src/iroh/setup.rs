@@ -12,7 +12,15 @@ use iroh::SecretKey;
 pub const ALPN: &[u8] = b"LANPARTYV0";
 
 pub async fn init_iroh_endpoint() -> AnyhowResult<Endpoint> {
-    let secret_key = get_or_create_secret()?;
+    let secret_key = if cfg!(debug_assertions) {
+      println!("Debug mode: generating a random secret key");
+      // In debug mode, generate a random secret key
+      create_random_secret()?
+    } else {
+      println!("Release mode: using a consistent secret key");
+      // In release mode, use a consistent secret key
+      get_or_create_secret()?
+    };
     let builder = Endpoint::builder()
         .alpns(vec![ALPN.to_vec()])
         .secret_key(secret_key)
@@ -57,3 +65,7 @@ pub fn get_or_create_secret() -> anyhow::Result<SecretKey> {
       Err(e) => Err(e).context("failed to check for secret key file"),
     }
   }
+
+pub fn create_random_secret() -> anyhow::Result<SecretKey> {
+    Ok(SecretKey::generate(rand::rngs::OsRng))
+}

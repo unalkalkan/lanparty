@@ -8,6 +8,8 @@ use serde::{Serialize, Deserialize};
 pub struct Ticket {
     pub topic: TopicId,
     pub nodes: Vec<NodeAddr>,
+    pub room_name: String,
+    pub host_name: String
 }
 
 impl Ticket {
