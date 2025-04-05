@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import PeerJoinNotification from '../../components/PeerJoinNotification';
 
 // Types for our data
 interface Player {
@@ -113,6 +114,22 @@ const Home = () => {
     }
   };
 
+  // Function to add a new player to the current room
+  const addPlayerToRoom = (player: Player) => {
+    if (currentRoom) {
+      // Check if player already exists in the room
+      const playerExists = currentRoom.players.some(p => p.id === player.id);
+      
+      if (!playerExists) {
+        // Create a new room object with the added player
+        setCurrentRoom({
+          ...currentRoom,
+          players: [...currentRoom.players, player]
+        });
+      }
+    }
+  };
+
   const renderCreateRoomForm = () => (
     <div className="room-form">
       <h2>Create a New Room</h2>
@@ -184,6 +201,10 @@ const Home = () => {
     
     return (
       <div className="room-view">
+        <PeerJoinNotification 
+          roomId={currentRoom.id} 
+          onPlayerJoin={addPlayerToRoom}
+        />
         <h2>Room: {currentRoom.name}</h2>
         <p className="room-id">Room ID: <span className="code">{currentRoom.id}</span></p>
         <p>Host: {currentRoom.host}</p>
