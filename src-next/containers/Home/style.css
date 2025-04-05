@@ -236,3 +236,86 @@
   opacity: 0.7;
   cursor: not-allowed;
 }
+
+/* Room ID and Copy Button Styles */
+.room-id-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0.5rem auto 1.5rem;
+  padding: 0.75rem;
+  background-color: #f8f9ff;
+  border-radius: 8px;
+  border: 1px solid #e2e5ff;
+  word-break: break-word; /* Ensures text breaks to prevent overflow */
+}
+
+.room-id {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  word-break: break-word; /* Ensures text breaks to prevent overflow */
+  width: 100%;
+  gap: 8px;
+  color: #4b5563;
+}
+
+.room-id span:first-child {
+  font-weight: 600;
+  color: #4f46e5;
+  margin-right: 4px;
+}
+
+.code {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: 500;
+  background-color: #f0f2ff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px dashed #c7d2fe;
+  color: #4338ca;
+  word-break: break-word; /* Ensures text breaks to prevent overflow */
+  display: inline-block;
+  margin-top: 5px;
+  user-select: all;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.copy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 6px 10px;
+  margin-left: 5px;
+  transition: all 0.2s ease;
+  color: #4f46e5;
+}
+
+.copy-button:hover {
+  background-color: #e0e7ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.1);
+}
+
+.copy-button:active {
+  transform: translateY(0);
+}
+
+.copy-success {
+  background-color: #dcfce7 !important;
+  border-color: #86efac !important;
+  color: #15803d !important;
+}
+
+.copy-icon {
+  font-size: 16px;
+}

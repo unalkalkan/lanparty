@@ -25,6 +25,7 @@ const Home = () => {
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const handleCreateRoom = () => {
     setChoice('create');
@@ -130,6 +131,22 @@ const Home = () => {
     }
   };
 
+  // Add a copy function to copy room ID to clipboard
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // Show success message
+      setCopySuccess(true);
+      
+      // Reset after 2 seconds
+      setTimeout(() => {
+        setCopySuccess(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   const renderCreateRoomForm = () => (
     <div className="room-form">
       <h2>Create a New Room</h2>
@@ -206,7 +223,20 @@ const Home = () => {
           onPlayerJoin={addPlayerToRoom}
         />
         <h2>Room: {currentRoom.name}</h2>
-        <p className="room-id">Room ID: <span className="code">{currentRoom.id}</span></p>
+        <div className="room-id-container">
+          <p className="room-id">
+            <span>Room ID</span>
+            <span className="code">{currentRoom.id}</span>
+            <button 
+              id="copy-button"
+              className={`copy-button ${copySuccess ? 'copy-success' : ''}`}
+              onClick={() => copyToClipboard(currentRoom.id)}
+              title="Copy Room ID">
+              <span className="copy-icon">{copySuccess ? '✅' : '📋'}</span> 
+              {copySuccess ? 'Copied!' : 'Copy'}
+            </button>
+          </p>
+        </div>
         <p>Host: {currentRoom.host}</p>
         
         <div className="player-list">
