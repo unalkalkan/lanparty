@@ -1,3 +1,4 @@
+use std::str::FromStr;
 use std::sync::Arc;
 
 use crate::iroh::gossip::listen_gossip;
@@ -5,7 +6,6 @@ use crate::models::{Player, Room, Ticket};
 use crate::state::AppState;
 use iroh_gossip::proto::TopicId;
 use tauri::State;
-use uuid::Uuid;
 
 #[tauri::command]
 pub async fn create_room(state: State<'_, AppState>, room_name: String, player_name: String) -> Result<Room, String> {
@@ -52,19 +52,43 @@ pub async fn create_room(state: State<'_, AppState>, room_name: String, player_n
 
 #[tauri::command]
 pub async fn join_room(state: State<'_, AppState>, room_id: String, player_name: String) -> Result<Room, String> {
-    let mut rooms = state.rooms.lock().await;
+    // Get the endpoint from the state
+    let endpoint = state.clone().iroh_endpoint.clone();
     
-    // Check if the room exists
-    let room = rooms.get_mut(&room_id).ok_or_else(|| "Room not found".to_string())?;
+    // Get the ticket from the room id
+    let Ticket { topic, nodes } = Ticket::from_str(&room_id).map_err(|_| "Invalid room ID".to_string())?;
+    println!("> joining chat room for topic {topic}");
+
+    // add the peer addrs from the ticket to our endpoint's addressbook so that they can be dialed
+    for peer in nodes.clone().into_iter() {
+        endpoint.add_node_addr(peer).map_err(|_| "Failed to add node address".to_string())?;
+    }
+    
+    // Add the room to our state
+    let mut room = Room {
+        id: room_id.clone(),
+        name: "Unknown".to_string(),
+        host: "Unknown".to_string(),
+        players: vec![],
+    };
+    let mut rooms = state.rooms.lock().await;
+    rooms.insert(room_id.clone(), room.clone());
     
     // Create a new player
-    let player_id = Uuid::new_v4().to_string();
+    let player_id = endpoint.node_id().to_string();
     let player = Player {
         id: player_id,
-        name: player_name,
+        name: player_name.clone(),
     };
     
-    // TODO: Connect to the Iroh endpoint if a ticket is available
+    // Connect to the gossip protocol
+    println!("> listening to the gossip protocol");
+    let iroh_endpoint = state.clone().iroh_endpoint.clone();
+    let gossip = state.clone().gossip.clone();
+    let nodes_arc = Arc::new(nodes.clone());
+    tokio::spawn(async move {
+        listen_gossip(iroh_endpoint, gossip, player_name.clone(), nodes_arc, topic).await.map_err(|_| "Failed to connect to gossip".to_string()) // TODO: Handle errors properly
+    });
     
     // Add the player to the room
     room.players.push(player);
