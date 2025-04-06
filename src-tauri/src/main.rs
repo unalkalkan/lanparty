@@ -15,7 +15,8 @@ use state::AppState;
 use handlers::{
     create_room, 
     join_room, 
-    get_rooms, 
+    get_rooms,
+    get_room, 
     leave_room,
     subscribe_peer_events,
 };
@@ -71,6 +72,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             create_room,
             join_room,
             get_rooms,
+            get_room,
             leave_room,
             subscribe_peer_events
         ])

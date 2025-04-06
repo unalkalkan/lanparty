@@ -178,6 +178,20 @@ pub async fn get_rooms(state: State<'_, AppState>) -> Result<Vec<Room>, String> 
 }
 
 #[tauri::command]
+pub async fn get_room(state: State<'_, AppState>, room_id: String) -> Result<Room, String> {
+    let rooms = state.rooms.lock().await;
+    // Check if the room exists
+    if !rooms.contains_key(&room_id) {
+        return Err("Room not found".to_string());
+    }
+    // Return the room
+    let room = rooms.get(&room_id).ok_or_else(|| "Room not found".to_string())?;
+    println!("> Found room: {:?}", room);
+    // Return the room
+    Ok(room.clone())
+}
+
+#[tauri::command]
 pub async fn leave_room(state: State<'_, AppState>, room_id: String, player_id: String) -> Result<(), String> {
     let mut rooms = state.rooms.lock().await;
     

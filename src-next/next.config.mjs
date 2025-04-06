@@ -16,6 +16,9 @@ const nextConfig = {
   },
   // Configure assetPrefix or else the server won't properly resolve your assets.
   assetPrefix: isProd ? undefined : `http://${internalHost}:3000`,
+  
+  // Simple configuration for static export
+  // No need for complex dynamic route handling anymore
 };
 
 export default nextConfig;

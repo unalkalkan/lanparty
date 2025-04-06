@@ -53,7 +53,7 @@ export function HomeScreen() {
       });
       
       setCurrentRoom(room);
-      router.push(`/room/${roomId}`);
+      router.push(`/room?id=${encodeURIComponent(roomId)}`);
     } catch (err) {
       console.error('Failed to join room:', err);
       setError(err instanceof Error ? err.message : 'Failed to join room');
@@ -79,7 +79,7 @@ export function HomeScreen() {
       });
       
       setCurrentRoom(room);
-      router.push(`/room/${room.id}`);
+      router.push(`/room?id=${encodeURIComponent(room.id)}`);
     } catch (err) {
       console.error('Failed to create room:', err);
       setError(err instanceof Error ? err.message : 'Failed to create room');
