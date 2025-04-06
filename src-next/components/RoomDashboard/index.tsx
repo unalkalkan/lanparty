@@ -24,7 +24,7 @@ import {
   SidebarTrigger,
   SidebarInset,
 } from "../ui/sidebar"
-import { invoke } from "@tauri-apps/api/tauri"
+import { invoke } from "@tauri-apps/api/core"
 import PeerJoinNotification from '../PeerJoinNotification'
 import { ThemeScript } from "../../lib/theme-script"
 

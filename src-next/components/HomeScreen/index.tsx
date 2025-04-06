@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
 import { ThemeToggle } from "../ui/theme-toggle"
 import { Users, Settings } from "lucide-react"
 import Link from "next/link"
-import { invoke } from "@tauri-apps/api/tauri"
+import { invoke } from "@tauri-apps/api/core"
 import PeerJoinNotification from '../PeerJoinNotification'
 import { ButtonTest } from "../ui/button-test"
 import { ThemeScript } from "../../lib/theme-script"
