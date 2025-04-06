@@ -11,7 +11,6 @@ import { Users, Settings } from "lucide-react"
 import Link from "next/link"
 import { invoke } from "@tauri-apps/api/core"
 import PeerJoinNotification from '../PeerJoinNotification'
-import { ButtonTest } from "../ui/button-test"
 import { ThemeScript } from "../../lib/theme-script"
 
 // Types copied from the existing Home component
@@ -112,16 +111,6 @@ export function HomeScreen() {
       </header>
       <main className="flex-1">
         <div className="container flex flex-col items-center justify-center px-4 py-12 md:py-24 lg:py-32">
-          {/* Test Buttons to verify Tailwind styles */}
-          <div className="mb-8 flex space-x-4">
-            <ButtonTest variant="default">Default</ButtonTest>
-            <ButtonTest variant="destructive">Destructive</ButtonTest>
-            <ButtonTest variant="outline">Outline</ButtonTest>
-            <ButtonTest variant="secondary">Secondary</ButtonTest>
-            <ButtonTest variant="ghost">Ghost</ButtonTest>
-            <ButtonTest variant="link">Link</ButtonTest>
-          </div>
-          
           <Card className="mx-auto max-w-md">
             <CardHeader>
               <CardTitle className="text-2xl">Welcome to P2P LAN Gaming</CardTitle>
