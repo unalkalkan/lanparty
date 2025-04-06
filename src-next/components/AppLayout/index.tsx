@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react';
 
 export type AppLayoutProps = {
@@ -6,8 +8,8 @@ export type AppLayoutProps = {
 
 export default function AppLayout(props: AppLayoutProps) {
   return (
-    <div className='app-layout'>
+    <>
       {props.children}
-    </div>
-  )
+    </>
+  );
 }

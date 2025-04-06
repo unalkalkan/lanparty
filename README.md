@@ -69,3 +69,62 @@ LAN Party leverages [Iroh](https://www.iroh.computer/) P2P library for peer-to-p
 ## ⚠️ Current Status
 
 This project is under active development and is not yet ready for public use. Features are being implemented and tested continuously. Stay tuned for the first release!
+
+# LAN Party
+
+A Tauri-based peer-to-peer application for creating virtual LAN environments.
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) v20.5.0 or higher
+- [npm](https://www.npmjs.com/) v10.8.1 or higher
+- [nvm](https://github.com/nvm-sh/nvm) (recommended for managing Node.js versions)
+- [Rust](https://www.rust-lang.org/) (required for Tauri)
+
+## Setup
+
+This project uses Node.js v20.5.0 and npm v10.8.1. To ensure you're using the correct versions, you can use the included setup script:
+
+```bash
+nvm use
+```
+
+## Development
+
+1. First, set up the correct Node.js version:
+
+```bash
+nvm use 20.5.0
+```
+
+2. Install dependencies (if you haven't already):
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+## Project Structure
+
+- `src-next/`: Next.js frontend code
+- `src-tauri/`: Tauri backend code
+- `ui-mock/`: UI component mockups
+
+## Available Scripts
+
+- `npm run setup`: Set up the correct Node.js version
+- `npm run dev`: Start the development server
+- `npm run lint`: Run ESLint on the Next.js code
+- `npm run clippy`: Run Clippy (Rust linter) on the Tauri code
+- `npm run next-build`: Build the Next.js application
+
+## Notes for Developers
+
+- The project requires Node.js v20.5.0 or higher, which you can install via nvm using the included `.nvmrc` file.
+- If you encounter errors related to Node.js or npm versions, run the setup script: `./setup-node.sh`
+- The project uses Tailwind CSS v4 for styling, which requires the `@tailwindcss/postcss` plugin.
