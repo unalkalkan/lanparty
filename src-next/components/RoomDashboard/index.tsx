@@ -201,7 +201,7 @@ export function RoomDashboard({ roomId }: { roomId: string }) {
           <SidebarHeader className="flex items-center justify-between p-4">
             <div className="flex items-center gap-2 font-bold">
               <Users className="h-5 w-5" />
-              <span>P2P LAN Gaming</span>
+              <span>LAN Party</span>
             </div>
             <SidebarTrigger />
           </SidebarHeader>

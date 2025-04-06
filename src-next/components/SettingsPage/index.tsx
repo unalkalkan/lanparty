@@ -243,7 +243,7 @@ export function SettingsPage() {
       </main>
       <footer className="border-t py-4">
         <div className="container flex justify-between items-center px-4">
-          <p className="text-sm text-muted-foreground">P2P LAN Gaming v1.0.0</p>
+          <p className="text-sm text-muted-foreground">LAN Party v1.0.0</p>
           <Button variant="outline" asChild>
             <Link href="/">Back to Home</Link>
           </Button>

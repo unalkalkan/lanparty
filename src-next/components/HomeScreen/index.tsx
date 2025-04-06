@@ -96,7 +96,7 @@ export function HomeScreen() {
         <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2 font-bold">
             <Users className="h-5 w-5" />
-            <span>P2P LAN Gaming</span>
+            <span>LAN Party</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/settings">
@@ -113,8 +113,8 @@ export function HomeScreen() {
         <div className="container flex flex-col items-center justify-center px-4 py-12 md:py-24 lg:py-32">
           <Card className="mx-auto max-w-md">
             <CardHeader>
-              <CardTitle className="text-2xl">Welcome to P2P LAN Gaming</CardTitle>
-              <CardDescription>Connect with friends and play games as if you're on the same LAN</CardDescription>
+              <CardTitle className="text-2xl">Welcome to LAN Party</CardTitle>
+              <CardDescription>Connect with friends and play games as if you're on the same room</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="join" className="w-full">
