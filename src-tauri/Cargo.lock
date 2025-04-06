@@ -3174,6 +3174,36 @@ dependencies = [
 ]
 
 [[package]]
+name = "lanparty"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "bytes",
+ "data-encoding",
+ "futures-lite 1.13.0",
+ "iroh",
+ "iroh-base",
+ "iroh-gossip",
+ "postcard",
+ "rand 0.8.5",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-global-shortcut",
+ "tauri-plugin-http",
+ "tauri-plugin-notification",
+ "tauri-plugin-os",
+ "tauri-plugin-process",
+ "tauri-plugin-shell",
+ "tokio",
+ "uuid",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3648,36 +3678,6 @@ name = "new_debug_unreachable"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
-
-[[package]]
-name = "nextauri"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "bytes",
- "data-encoding",
- "futures-lite 1.13.0",
- "iroh",
- "iroh-base",
- "iroh-gossip",
- "postcard",
- "rand 0.8.5",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-global-shortcut",
- "tauri-plugin-http",
- "tauri-plugin-notification",
- "tauri-plugin-os",
- "tauri-plugin-process",
- "tauri-plugin-shell",
- "tokio",
- "uuid",
-]
 
 [[package]]
 name = "nix"

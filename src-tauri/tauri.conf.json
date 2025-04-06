@@ -40,10 +40,10 @@
       }
     }
   },
-  "productName": "nextauri",
-  "mainBinaryName": "nextauri",
+  "productName": "lanparty",
+  "mainBinaryName": "lanparty",
   "version": "0.1.0",
-  "identifier": "com.nextauri.dev",
+  "identifier": "com.lanparty.dev",
   "plugins": {},
   "app": {
     "windows": [
@@ -51,10 +51,10 @@
         "transparent": false,
         "decorations": true,
         "fullscreen": false,
-        "height": 600,
-        "resizable": true,
-        "title": "nextauri",
-        "width": 800,
+        "title": "lanparty",
+        "width": 1122,
+        "height": 750,
+        "resizable": false,
         "useHttpsScheme": true
       }
     ],
