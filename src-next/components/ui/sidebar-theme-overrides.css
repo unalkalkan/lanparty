@@ -1,0 +1,48 @@
+/* Sidebar Theme Overrides */
+
+/* Make sidebar background pure white in light mode */
+html:not(.dark) [data-sidebar="sidebar"] {
+  background-color: hsl(0, 0%, 100%);
+}
+
+/* Adjust font weight and spacing */
+[data-sidebar="group"],
+[data-sidebar="menu-item"] {
+  font-weight: 500;
+}
+
+/* Adjust spacing and alignment */
+[data-sidebar="content"] {
+  gap: 0.75rem;
+}
+
+/* Style status indicators for connected peers */
+[data-sidebar="menu-item"] [data-status="online"] {
+  color: hsl(142, 76%, 36%);
+}
+
+[data-sidebar="menu-item"] [data-status="away"] {
+  color: hsl(38, 92%, 50%);
+}
+
+[data-sidebar="menu-item"] [data-status="offline"] {
+  color: hsl(0, 84%, 60%);
+}
+
+/* Make the heading text slightly larger */
+[data-sidebar="header"] h3,
+[data-sidebar="header"] h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* Adjust element spacing */
+[data-sidebar="group-label"] {
+  margin-top: 0.25rem;
+  letter-spacing: 0.01em;
+}
+
+/* Main content background */
+main:not([data-sidebar]) {
+  background-color: hsl(0, 0%, 100%);
+} 

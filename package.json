@@ -5,10 +5,9 @@
     "tauri": "tauri",
     "lint": "next lint src-next",
     "next": "next src-next",
-    "next-dev": "npm run build:css && next src-next dev",
+    "next-dev": "next src-next dev",
     "clippy": "cargo clippy --manifest-path ./src-tauri/Cargo.toml",
-    "next-build": "npm run build:css && next build src-next",
-    "build:css": "npx tailwindcss -i ./src-next/css/index.css -o ./src-next/css/tailwind.css"
+    "next-build": "next build src-next"    
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.3",

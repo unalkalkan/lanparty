@@ -1,5 +1,5 @@
-import '../css/index.css';
-import '../css/tailwind.css';
+import "./globals.css"
+import "../components/ui/sidebar-theme-overrides.css"
 import AppLayout from 'components/AppLayout';
 import { ThemeProvider } from 'next-themes';
 import { ThemeEffect } from '../lib/theme-effect';
