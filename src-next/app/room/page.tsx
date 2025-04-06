@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { RoomDashboard } from "../../components/RoomDashboard"
 import { Button } from "../../components/ui/button"
 
-export default function RoomPage() {
+function RoomContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [roomId, setRoomId] = useState<string | null>(null)
@@ -50,5 +50,19 @@ export default function RoomPage() {
         Back to Home
       </Button>
     </div>
+  )
+}
+
+export default function RoomPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="mb-4">Loading room...</p>
+        </div>
+      </div>
+    }>
+      <RoomContent />
+    </Suspense>
   )
 } 

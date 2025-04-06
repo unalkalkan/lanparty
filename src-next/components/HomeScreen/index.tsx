@@ -10,7 +10,6 @@ import { ThemeToggle } from "../ui/theme-toggle"
 import { Users, Settings } from "lucide-react"
 import Link from "next/link"
 import { invoke } from "@tauri-apps/api/core"
-import PeerJoinNotification from '../PeerJoinNotification'
 import { ThemeScript } from "../../lib/theme-script"
 
 // Types copied from the existing Home component
@@ -30,10 +29,11 @@ export function HomeScreen() {
   const [roomId, setRoomId] = useState("")
   const [roomName, setRoomName] = useState("")
   const [playerName, setPlayerName] = useState("")
-  const [currentRoom, setCurrentRoom] = useState<Room | null>(null)
+  // const [currentRoom, setCurrentRoom] = useState<Room | null>(null)
+  const [_, setCurrentRoom] = useState<Room | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [copySuccess, setCopySuccess] = useState(false)
+  // const [copySuccess, setCopySuccess] = useState(false)
   const router = useRouter()
 
   const joinRoom = async () => {
@@ -114,7 +114,7 @@ export function HomeScreen() {
           <Card className="mx-auto max-w-md">
             <CardHeader>
               <CardTitle className="text-2xl">Welcome to LAN Party</CardTitle>
-              <CardDescription>Connect with friends and play games as if you're on the same room</CardDescription>
+              <CardDescription>Connect with friends and play games as if you are on the same room</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="join" className="w-full">
