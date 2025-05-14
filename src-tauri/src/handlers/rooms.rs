@@ -137,22 +137,36 @@ pub async fn join_room(state: State<'_, AppState>, room_id: String, player_name:
         endpoint.add_node_addr(peer).map_err(|_| "Failed to add node address".to_string())?;
     }
     
-    // Add the room to our state
-    let mut room = Room {
-        id: room_id.clone(),
-        name: room_name,
-        host: host_name,
-        players: vec![],
+    // Get the host's node ID (assuming it's the first node in the ticket)
+    let host_id = if !nodes.is_empty() {
+        nodes[0].node_id.to_string()
+    } else {
+        // Fallback if for some reason there are no nodes
+        "unknown_host_id".to_string()
     };
-    let mut rooms = state.rooms.lock().await;
-    rooms.insert(room_id.clone(), room.clone());
     
-    // Create a new player
+    // Create a new player for the host
+    let host_player = Player {
+        id: host_id.clone(),
+        name: host_name.clone(),
+    };
+
+    // Create a new player for the joiner
     let player_id = endpoint.node_id().to_string();
     let player = Player {
         id: player_id,
         name: player_name.clone(),
     };
+    
+    // Create the room with the host already included in players
+    let room = Room {
+        id: room_id.clone(),
+        name: room_name,
+        host: host_name,
+        players: vec![host_player, player], // Include the host player
+    };
+    
+    let mut rooms = state.rooms.lock().await;
     
     // Connect to the gossip protocol
     println!("> listening to the gossip protocol");
@@ -165,8 +179,8 @@ pub async fn join_room(state: State<'_, AppState>, room_id: String, player_name:
         listen_gossip(iroh_endpoint, gossip, player_name.clone(), nodes_arc, topic, peer_event_broadcaster, peer_events_cache).await.map_err(|_| "Failed to connect to gossip".to_string()) // TODO: Handle errors properly
     });
     
-    // Add the player to the room
-    room.players.push(player);
+    // Update the room in the state with the updated player list
+    rooms.insert(room_id.clone(), room.clone());
     
     Ok(room.clone())
 }
