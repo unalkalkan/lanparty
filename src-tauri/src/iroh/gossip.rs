@@ -65,6 +65,9 @@ async fn subscribe_loop(
 ) -> AnyhowResult<()> {
     // init a peerid -> name hashmap
     let mut names = HashMap::new();
+    // Track peers we've already seen to avoid duplicates
+    let mut seen_peers = std::collections::HashSet::new();
+    
     println!("> Subscribe loop started for topic: {}", topic_id);
     
     while let Some(event) = receiver.try_next().await? {
@@ -72,6 +75,15 @@ async fn subscribe_loop(
             let (from, message) = SignedMessage::verify_and_decode(&msg.content).map_err(|_| anyhow::anyhow!("Failed to decode message"))?;
             match message {
                 Message::About { player_name } => {
+                    // Skip if we've already processed this peer
+                    if seen_peers.contains(&from) {
+                        println!("> Already processed peer: {} ({})", from.fmt_short(), player_name);
+                        continue;
+                    }
+                    
+                    // Mark this peer as seen
+                    seen_peers.insert(from.clone());
+                    
                     names.insert(from, player_name.clone());
                     println!("> {} is now known as {}", from.fmt_short(), player_name);
                     
@@ -86,7 +98,12 @@ async fn subscribe_loop(
                     {
                         let mut cache = peer_events_cache.lock().await;
                         let events = cache.entry(topic_id.clone()).or_insert_with(Vec::new);
-                        events.push(peer_event.clone());
+                        
+                        // Check if we already have an event for this peer
+                        let peer_exists = events.iter().any(|e| e.peer_id == peer_event.peer_id);
+                        if !peer_exists {
+                            events.push(peer_event.clone());
+                        }
                     }
                     
                     println!("> Broadcasting peer join event for {} in topic {}", player_name, topic_id);

@@ -34,15 +34,18 @@ pub async fn subscribe_peer_events(window: Window, state: State<'_, AppState>, r
                 println!("> Sending cached event: {} joined", event.player_name);
                 let _ = window.emit("peer-joined", &event);
                 
-                // Add the player to room's player list.
-                state.clone().rooms.lock().await
-                    .get_mut(&room_id)
-                    .map(|room| {
+                // Add the player to room's player list if not already present
+                let state_clone = state.clone();
+                let mut rooms = state_clone.rooms.lock().await;
+                if let Some(room) = rooms.get_mut(&room_id) {
+                    // Check if player already exists in the room
+                    if !room.players.iter().any(|p| p.id == event.peer_id) {
                         room.players.push(Player {
                             id: event.peer_id.clone(),
                             name: event.player_name.clone(),
                         });
-                    });
+                    }
+                }
             }
         } else {
             println!("> No cached peer events for topic {}", topic_id);
@@ -60,15 +63,17 @@ pub async fn subscribe_peer_events(window: Window, state: State<'_, AppState>, r
                 println!("> Forwarding event: {} joined", event.player_name);
                 let _ = window_clone.emit("peer-joined", &event);
 
-                // Add the player to room's player list.
-                rooms.lock().await
-                    .get_mut(&room_id)
-                    .map(|room| {
+                // Add the player to room's player list if not already present
+                let mut rooms_lock = rooms.lock().await;
+                if let Some(room) = rooms_lock.get_mut(&room_id) {
+                    // Check if player already exists in the room
+                    if !room.players.iter().any(|p| p.id == event.peer_id) {
                         room.players.push(Player {
                             id: event.peer_id.clone(),
                             name: event.player_name.clone(),
                         });
-                    });
+                    }
+                }
             }
         }
         println!("> Stopped listening for peer events");
